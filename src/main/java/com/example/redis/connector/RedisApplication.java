@@ -34,8 +34,8 @@ public class RedisApplication implements CommandLineRunner {
 
             // int connectionTimeout, int soTimeout, int maxAttempts, String password, String clientName, GenericObjectPoolConfig<Connection> poolConfig, boolean ssl)
             int timeOuts = 10000;
-            JedisCluster cluster = new JedisCluster(hostAndPorts, timeOuts, timeOuts, 2, "",
-                    "EC2-client", null, true);
+            JedisCluster cluster = new JedisCluster(hostAndPorts, timeOuts, timeOuts, 2, null,
+                 null, null, true);
 
             String str = cluster.set("BESTIES", "ROMEO/JULIET");
             logger.info(str);

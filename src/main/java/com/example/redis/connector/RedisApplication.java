@@ -29,7 +29,7 @@ public class RedisApplication implements CommandLineRunner {
         try {
             String hostName = System.getenv("REDIS_CLUSTER_ENDPOINT");
             List<InetAddress> clusterNodes = Arrays.asList(InetAddress.getAllByName(hostName));
-            clusterNodes.stream().forEach(inetAddress -> {logger.info(inetAddress.getHostName());});
+            clusterNodes.stream().forEach(inetAddress -> {logger.info(inetAddress.getHostAddress());});
             String node1 = System.getenv("REDIS_NODE1");
             String node2 = System.getenv("REDIS_NODE2");
             String node3 = System.getenv("REDIS_NODE3");

@@ -9,11 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import redis.clients.jedis.Connection;
 import redis.clients.jedis.HostAndPort;
 import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.params.SetParams;
+import redis.clients.jedis.util.JedisClusterCRC16;
 
 import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -47,10 +51,14 @@ public class RedisApplication implements CommandLineRunner {
             JedisCluster cluster = new JedisCluster(hostAndPorts, timeOuts, timeOuts, 2, null,
                     null, connectionPoolConfig, true);
 
-            String str = cluster.set("BESTIES", "ROMEO/JULIET");
-            logger.info(str);
+            while(true) {
+                String key = UUID.randomUUID().toString();
+                String str = cluster.set(key, "ROMEO/JULIET", new SetParams().ex(5));
+                logger.error("Added key {} status {}", key, str);
+                Thread.sleep(1000);
+            }
 
-            logger.info("Invoking Business Application");
+
         } catch (Exception ex) {
             logger.info("Failed to get connection", ex);
         }

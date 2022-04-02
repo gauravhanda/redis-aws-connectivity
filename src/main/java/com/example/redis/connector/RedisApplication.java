@@ -32,7 +32,7 @@ public class RedisApplication implements CommandLineRunner {
             List<InetAddress> clusterNodes = Arrays.asList(InetAddress.getAllByName(hostName));
 
             Set<HostAndPort> hostAndPorts = clusterNodes.stream()
-                    .map(inetAddress -> new HostAndPort(inetAddress.getHostAddress(), 6379))
+                    .map(inetAddress -> new HostAndPort(inetAddress.getCanonicalHostName(), 6379))
                     .collect(Collectors.toSet());
 
             logger.error(hostAndPorts.toString());

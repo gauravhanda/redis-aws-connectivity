@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class RedisApplication implements CommandLineRunner {
@@ -29,16 +30,12 @@ public class RedisApplication implements CommandLineRunner {
         try {
             String hostName = System.getenv("REDIS_CLUSTER_ENDPOINT");
             List<InetAddress> clusterNodes = Arrays.asList(InetAddress.getAllByName(hostName));
-            clusterNodes.stream().forEach(inetAddress -> {logger.info(inetAddress.getHostAddress());});
-            String node1 = System.getenv("REDIS_NODE1");
-            String node2 = System.getenv("REDIS_NODE2");
-            String node3 = System.getenv("REDIS_NODE3");
-            int port = 6379;
-            logger.info("Adding nodes {} , {}, {} -> Port = {}", node1, node2, node3, port);
-            Set<HostAndPort> hostAndPorts = Set.copyOf(Arrays.asList(new HostAndPort(node1, port),
-                    new HostAndPort(node2, port),
-                    new HostAndPort(node3, port)));
 
+            Set<HostAndPort> hostAndPorts = clusterNodes.stream()
+                    .map(inetAddress -> new HostAndPort(inetAddress.getHostAddress(), 6379))
+                    .collect(Collectors.toSet());
+
+            logger.error(hostAndPorts.toString());
             // int connectionTimeout, int soTimeout, int maxAttempts, String password, String clientName, GenericObjectPoolConfig<Connection> poolConfig, boolean ssl)
             int timeOuts = 10000;
             GenericObjectPoolConfig<Connection> connectionPoolConfig = new GenericObjectPoolConfig<>();

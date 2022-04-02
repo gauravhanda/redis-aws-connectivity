@@ -30,6 +30,10 @@ public class RedisApplication implements CommandLineRunner {
         try {
             String hostName = System.getenv("REDIS_CLUSTER_ENDPOINT");
             List<InetAddress> clusterNodes = Arrays.asList(InetAddress.getAllByName(hostName));
+            clusterNodes.stream().forEach(inetAddress -> logger.error("{} {} {} {}", new String(inetAddress.getAddress()),
+                    inetAddress.getHostAddress(),
+                    inetAddress.getHostName(),
+                    inetAddress.getCanonicalHostName()));
 
             Set<HostAndPort> hostAndPorts = clusterNodes.stream()
                     .map(inetAddress -> new HostAndPort(inetAddress.getCanonicalHostName(), 6379))

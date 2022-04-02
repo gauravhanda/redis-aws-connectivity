@@ -52,10 +52,14 @@ public class RedisApplication implements CommandLineRunner {
                     null, connectionPoolConfig, true);
 
             while(true) {
-                String key = UUID.randomUUID().toString();
-                String str = cluster.set(key, "ROMEO/JULIET", new SetParams().ex(5));
-                logger.error("Added key {} status {}", key, str);
-                Thread.sleep(1000);
+                try {
+                    String key = UUID.randomUUID().toString();
+                    String str = cluster.set(key, "ROMEO/JULIET", new SetParams().ex(5));
+                    logger.error("Added key {} status {}", key, str);
+                    Thread.sleep(1000);
+                }catch (Exception ex) {
+                    logger.error("Failed to set key {} ", ex);
+                }
             }
 
 
